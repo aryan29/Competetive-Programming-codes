@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<long long int>adj[100005];
+    long long int n,child[100005],ans[100005],ma=0,vis[100005];
+    void dfs(int node){
+        vis[node]=1;
+        child[node]=1;
+        for(auto it:adj[node]){
+            if(vis[it]==0)
+            {
+                dfs(it);
+                if(child[it]!=0)
+                    ans[node]*=child[it];
+                if(n-child[it]!=0)
+                    ans[it]*=(n-child[it]);
+                ma=max(ma,ans[node]);
+                ma=max(ma,ans[it]);
+                child[node]+=child[it];
+                
+            }
+        }
+    }
+    int countHighestScoreNodes(vector<int>& parents) {
+        n=parents.size();
+        ans[0]=1;
+        for(int i=1;i<n;i++){
+            ans[i]=1;
+            adj[i].push_back(parents[i]);
+            adj[parents[i]].push_back(i);
+        }
+        long long int k=0;
+        dfs(0);
+        for(int i=0;i<n;i++){
+            if(ans[i]==ma)
+                k++;
+        }
+        return k;
+    }
+};
